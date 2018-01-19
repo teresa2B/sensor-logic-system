@@ -1,10 +1,12 @@
 <?php
 	require 'config.php';
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
 	$result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
@@ -13,7 +15,7 @@
 ?>
 <?php
 	require 'config.php';
-    
+    $conn = '';
     $today=getdate();
     $year1= $today['year'];
     $year2=	$today['year']-1;
@@ -25,7 +27,9 @@
     $year8= $today['year']-7;  
     $date= array($year8, $year7, $year6, $year5, $year4, $year3, $year2, $year1);
     
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query = sprintf("SELECT * FROM utente inner join credenziale on id=utente where permesso ='u' and year(dataregistrazione) = ".$year1);
     $result = $conn->query($query);
     $clienti1 = $result->num_rows;

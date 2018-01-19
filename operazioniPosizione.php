@@ -1,10 +1,12 @@
 <?php
 	require 'config.php';
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'", mysqli_real_escape_string($conn, $email), mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
@@ -302,12 +304,18 @@
     	<button class="buttfiltro" name="salvare" value="salvare" type="submit" id="salvare" 
         	<?php 
            		require 'config.php';
+                $conn = '';
+                $query = '';
         		$id=$_POST['id2']; 
                 if(isset($id)===false){
                 	echo ' disabled ';
                 }
-                $query=sprintf("SELECT * FROM posizione WHERE id='%s'", mysqli_real_escape_string($conn, $id));
-                $conn = new mysqli($servername, $user, $pass, $database);
+                if(empty($query) === true) {
+                	$query=sprintf("SELECT * FROM posizione WHERE id='%s'", mysqli_real_escape_string($conn, $id));
+                }    
+                if(empty($conn) === true){
+    				$conn = new mysqli($servername, $user, $pass, $database);
+   				}
                 $result = '';
                 if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                 	$result = $conn->query($query);

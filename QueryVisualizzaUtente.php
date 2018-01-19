@@ -21,5 +21,27 @@ class QueryVisualizzaUtente{
                          $query=$query.sprintf(' order by utente.id');
          return $query;
     }
+    function tablequery($result){
+    for($i=0; $i<$result->num_rows; $i++) {
+                        	$row=mysqli_fetch_row($result);
+                            $str='';
+                        	$str = '<tr>';
+                            $str = $str.'<td>'.htmlspecialchars($row[0]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[1]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[3]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[2]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[13]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[5]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[7]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[8]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[9]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[11]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[10]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[6]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[4]).'</td>';
+                            $str = $str.'</tr>';
+                            echo $str;
+                        }
+    }
 }
 ?>

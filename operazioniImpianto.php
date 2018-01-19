@@ -1,11 +1,13 @@
 <?php
 	require 'config.php';
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
     $query = sprintf("SELECT * FROM credenziale where email='".$email."' and password='".$password."'");
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if($conn === '') {
+    	$conn = new mysqli($servername, $user, $pass, $database);
+	}
     $result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
     	    header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
@@ -443,12 +445,15 @@
     	<button class="buttfiltro" name="salvare" value="salvare" type="submit" id="salvare" 
         	<?php 
            		require 'config.php';
+                $conn = '';
         		$id=$_POST['id2']; 
                 if(isset($id)===false){
                 	echo ' disabled ';
                 }
                 $query=sprintf('SELECT * FROM impianto WHERE id='.$id);
-                $conn = new mysqli($servername, $user, $pass, $database);
+                if($conn === '') {
+                    $conn = new mysqli($servername, $user, $pass, $database);
+                }
                 $result = $conn->query($query);
                 if($result->num_rows !== 1){
                 	echo ' disabled ';

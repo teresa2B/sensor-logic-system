@@ -1,10 +1,12 @@
 <?php
 	require 'config.php';
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
@@ -13,13 +15,16 @@
 ?>
 <?php
 	require 'config.php';
+    $conn = '';
     session_start();
     $email=$_SESSION['email'];
     $impianto=$_SESSION['impianto'];
     $tipo=array();
     $countTipo=array();
     
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query=sprintf("SELECT sensore.tipo, count(sensore.tipo) FROM sensore inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where impianto.nomeimpianto='%s' and email ='%s' group by sensore.tipo order by count(sensore.tipo) desc",mysqli_real_escape_string($conn, $impianto),mysqli_real_escape_string($conn, $email));
     $result=$conn->query($query);
    

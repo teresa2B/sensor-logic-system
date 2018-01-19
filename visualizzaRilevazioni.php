@@ -1,10 +1,12 @@
 <?php
 	require 'config.php';
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
@@ -55,6 +57,8 @@
                 <tbody>
                     <?php
                     	require 'config.php';
+                        $conn = '';
+                        $query = '';
                         session_start();
                         $email=$_SESSION['email'];
                         $impianto=$_SESSION['impianto'];
@@ -64,8 +68,9 @@
                         $tipo=$_POST['tipo'];
                         $marca=$_POST['marca'];
                         $nomeposizione=$_POST['nomeposizione'];
-                        
-                        $query = sprintf("SELECT rilevazione.id, rilevazione.rilevazione, sensore.id, sensore.tipo, sensore.marca, posizione.nomeposizione FROM rilevazione inner join sensore on rilevazione.sensore=sensore.id inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario= utente.id inner join credenziale on utente.id=credenziale.utente where impianto.nomeimpianto ='%s' and credenziale.email='%s' ",mysqli_real_escape_string($conn, $impianto),mysqli_real_escape_string($conn, $email));
+                        if(empty($query) === true) {
+                        	$query = sprintf("SELECT rilevazione.id, rilevazione.rilevazione, sensore.id, sensore.tipo, sensore.marca, posizione.nomeposizione FROM rilevazione inner join sensore on rilevazione.sensore=sensore.id inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario= utente.id inner join credenziale on utente.id=credenziale.utente where impianto.nomeimpianto ='%s' and credenziale.email='%s' ",mysqli_real_escape_string($conn, $impianto),mysqli_real_escape_string($conn, $email));
+                        }
                         if(!empty($idr)) {
                         	$query = $query.sprintf(' and  rilevazione.id= '.$idr);
                         }
@@ -84,7 +89,9 @@
                         
                        $query = $query.sprintf(' order by rilevazione.id');
                       
-                       $conn = new mysqli($servername, $user, $pass, $database);
+                       if(empty($conn) === true){
+    						$conn = new mysqli($servername, $user, $pass, $database);
+    				   }
                        $result = '';
                        if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                         	$result = $conn->query($query);

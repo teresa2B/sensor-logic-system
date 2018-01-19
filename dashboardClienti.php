@@ -1,10 +1,13 @@
 <?php
 	require 'config.php';
+    $conn= '';
     
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $query = sprintf("SELECT * FROM credenziale WHERE email = '%s' AND password = '%s'",  mysqli_real_escape_string($conn, $email),  mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
@@ -23,10 +26,13 @@
 </head>
 <body>
 	<?php
+    	$conn = '';
     	$impianto='';
         session_start();
         require 'config.php';
-        $conn = new mysqli($servername, $user, $pass, $database);
+        if(empty($conn) === true){
+    		$conn = new mysqli($servername, $user, $pass, $database);
+    	}
         $email=$_SESSION['email'];
 
         if($_GET['impianto']==='Nessun impianto registrato') {
@@ -53,8 +59,14 @@
                   <br />
                   	<?php
                     	require 'config.php';
-                    	$conn = new mysqli($servername, $user, $pass, $database);
-                        $query = sprintf("select * from posizione inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto= '%s' and email= '%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        $conn = '';
+                        $query = '';
+                    	if(empty($conn) === true){
+    						$conn = new mysqli($servername, $user, $pass, $database);
+    					}
+                        if(empty($query) === true){
+    						$query = sprintf("select * from posizione inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto= '%s' and email= '%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+    					}
                         $result = '';
                 		if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                 			$result = $conn->query($query);
@@ -68,8 +80,14 @@
                   <br />
                   	<?php
                     	require 'config.php';
-                    	$conn = new mysqli($servername, $user, $pass, $database);
-                        $query = sprintf("select * from sensore inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto='%s' and email='%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        $conn = '';
+                        $query = '';
+                    	if(empty($conn) === true){
+    						$conn = new mysqli($servername, $user, $pass, $database);
+    					}
+                        if(empty($query) === true){
+                        	$query = sprintf("select * from sensore inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto='%s' and email='%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        }
                         $result = '';
                 		if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                 			$result = $conn->query($query);
@@ -83,8 +101,14 @@
                   <br />
                   	<?php
                     	require 'config.php';
-                    	$conn = new mysqli($servername, $user, $pass, $database);
-                        $query = sprintf("select * from rilevazione inner join sensore on rilevazione.sensore=sensore.id inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto='%s' and email='%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        $conn = '';
+                        $query = '';
+                    	if(empty($conn) === true){
+    						$conn = new mysqli($servername, $user, $pass, $database);
+    					}
+                        if(empty($query) === true){
+                        	$query = sprintf("select * from rilevazione inner join sensore on rilevazione.sensore=sensore.id inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto='%s' and email='%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        }
                         $result = '';
                 		if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                 			$result = $conn->query($query);
@@ -98,7 +122,11 @@
                   <br />
                   	<?php
                     	require 'config.php';
-                    	$conn = new mysqli($servername, $user, $pass, $database);
+                        $conn = '';
+                        $query = '';
+                    	if(empty($conn) === true){
+    						$conn = new mysqli($servername, $user, $pass, $database);
+    					}
                         $today=getdate();
                         $date=$today['year'];
                         if($today['mon']<10){
@@ -111,8 +139,9 @@
                         }else{
                         	$date=$date.$today['mday'];
                         }
-                        
-                        $query = sprintf("select rilevazione from rilevazione inner join sensore on rilevazione.sensore=sensore.id inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto='%s' and email='%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        if(empty($query) === true) {
+                        	$query = sprintf("select rilevazione from rilevazione inner join sensore on rilevazione.sensore=sensore.id inner join posizione on sensore.posizione=posizione.id inner join impianto on posizione.impianto=impianto.id inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where nomeimpianto='%s' and email='%s'",mysqli_real_escape_string($conn, $impianto),  mysqli_real_escape_string($conn, $email));
+                        }
                         $result = '';
                 		if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                 			$result = $conn->query($query);
@@ -135,8 +164,14 @@
             <div class="contenitoreTipo";><canvas id="chartRilevazioni" class="chartRilevazioni"></canvas></div>
             
 <script type="text/javascript">
-    var tipo = <?php require 'chartTipo.php'; echo json_encode($tipo) ?>;
-    var countTipo = <?php require 'chartTipo.php'; echo json_encode($countTipo) ?>;
+	var tipo = new String(""); 
+    if(tipo == '') {
+    	tipo = <?php require 'chartTipo.php'; echo json_encode($tipo) ?>;
+    }
+    var countTipo = new String(""); 
+    if(countTipo == '') {
+    	countTipo = <?php require 'chartTipo.php'; echo json_encode($countTipo) ?>;
+    }
                 
     var myChart = new Chart(document.getElementById("chartTipo"), {
         type: 'doughnut',
@@ -159,8 +194,14 @@
       });
 </script>
 <script type="text/javascript">
- 		var tipo = <?php require 'chartRilevazioni.php'; echo json_encode($tipo) ?>;
-    	var rilevazioni = <?php require 'chartRilevazioni.php'; echo json_encode($rilevazioni) ?>;
+		var tipo = new String(""); 
+        if(tipo == '') {
+ 			tipo = <?php require 'chartRilevazioni.php'; echo json_encode($tipo) ?>;
+        }
+        var rilevazioni = new String(""); 
+        if(rilevazioni == '') {
+    		rilevazioni = <?php require 'chartRilevazioni.php'; echo json_encode($rilevazioni) ?>;
+        }    
    		var chart= new Chart(document.getElementById("chartRilevazioni"), {
         type: 'horizontalBar',
         data: {

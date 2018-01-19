@@ -1,10 +1,12 @@
 <?php
 require 'config.php';
-
+$conn = '';
 session_start();
 $email = $_SESSION['email'];
 $password = $_SESSION['password'];
-$conn = new mysqli($servername, $user, $pass, $database);
+if(empty($conn) === true){
+   	$conn = new mysqli($servername, $user, $pass, $database);
+}
 $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
 $result = $conn->query($query);
 if($result === false || $result->num_rows != 1){
@@ -95,6 +97,10 @@ class PDF extends FPDF
 
     }
 }
+
+$conn = '';
+$query = '';
+
 // crea l'istanza del documento
 $p = new PDF();
 $p->AliasNbPages();
@@ -119,11 +125,12 @@ $p->Write(5, "\n\n");
 $header = array('ID Rilevazione', 'Data rilevazione', 'Orario rilevazione', 'Valore rilevazione', 'ID Sensore', 'Tipologia sensore', 'Marca sensore', 'Posizione');
 
 $querypdf= new OperazioniPDF();
-$query= $querypdf->queryPdf(mysqli_real_escape_string($conn, $idr), mysqli_real_escape_string($conn, $ids), mysqli_real_escape_string($conn, $tipo), mysqli_real_escape_string($conn, $nomeposizione), mysqli_real_escape_string($conn, $marca), mysqli_real_escape_string($conn, $impianto), mysqli_real_escape_string($conn, $email));
-
-
-
-$conn = new mysqli($servername, $user, $pass, $database);
+if(empty($query) === true){
+	$query= $querypdf->queryPdf(mysqli_real_escape_string($conn, $idr), mysqli_real_escape_string($conn, $ids), mysqli_real_escape_string($conn, $tipo), mysqli_real_escape_string($conn, $nomeposizione), mysqli_real_escape_string($conn, $marca), mysqli_real_escape_string($conn, $impianto), mysqli_real_escape_string($conn, $email));
+}
+if(empty($conn) === true){
+   	$conn = new mysqli($servername, $user, $pass, $database);
+}
 $result = $conn->query($query);
 
 $data = array();

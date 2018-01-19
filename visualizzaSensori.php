@@ -1,10 +1,12 @@
 <?php
 	require 'config.php';
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if($conn === '') {
+    	$conn = new mysqli($servername, $user, $pass, $database);
+	}
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
     if($result === false || $result->num_rows != 1){
@@ -47,7 +49,7 @@
                 <tbody>
                     <?php
                     	require 'config.php';
-                        
+                        $conn = '';
                         $id=$_POST['id'];
                         $tipo=$_POST['tipo'];
                         $marca=$_POST['marca'];
@@ -68,7 +70,9 @@
                         }
           				$query=$query.sprintf(' order by sensore.id');
                         
-                        $conn = new mysqli($servername, $user, $pass, $database);
+                        if($conn === '') {
+    						$conn = new mysqli($servername, $user, $pass, $database);
+						}
                         $result = '';
                         if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                         	$result = $conn->query($query);
