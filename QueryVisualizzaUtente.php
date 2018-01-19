@@ -4,16 +4,16 @@ class QueryVisualizzaUtente{
     					
     	 				
                         if(!empty($id)) {
-                        	$query = $query.sprintf(' and id = '.$id);
+                        	$query = $query.sprintf(" and id = '%s'");
                         }
                         if(!empty($nome)){
-                           	$query = $query.sprintf(" and nome = '".$nome."'");
+                           	$query = $query.sprintf(" and nome = '%s'");
                         }
                         if(!empty($cognome)){
-                           	$query = $query.sprintf(" and cognome = '".$cognome."'");
+                           	$query = $query.sprintf(" and cognome = '%s'");
                         }
                         if(!empty($email)){
-                           	$query = $query.sprintf(" and email = '".$email."'");
+                           	$query = $query.sprintf(" and email = '%s'");
                         }
                         if(!empty($citta)){
                            	$query = $query.sprintf(" and citta = '%s'");
