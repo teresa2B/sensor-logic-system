@@ -65,9 +65,9 @@
                         
                         $query = sprintf("select * from utente inner join credenziale on id=utente where permesso='u'");
                        	$visualcli= new QueryVisualizzaUtente();
-                        $query= $visualamm-> visualizzaut($query, mysqli_real_escape_string($conn, $id),mysqli_real_escape_string($conn, $nome),mysqli_real_escape_string($conn, $cognome), mysqli_real_escape_string($conn, $email), mysqli_real_escape_string($conn, $citta));
+                        $query= $visualcli-> visualizzaut($query, mysqli_real_escape_string($conn, $id),mysqli_real_escape_string($conn, $nome),mysqli_real_escape_string($conn, $cognome), mysqli_real_escape_string($conn, $email), mysqli_real_escape_string($conn, $citta));
                   
-                       $conn = new mysqli($servername, $user, $pass, $database);
+                       	$conn = new mysqli($servername, $user, $pass, $database);
                         $result = '';
                         if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                         	$result = $conn->query($query);
