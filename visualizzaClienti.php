@@ -66,7 +66,7 @@
                         $query = sprintf("select * from utente inner join credenziale on id=utente where permesso='u'");
                        	$visualcli= new QueryVisualizzaUtente();
                         $query= $visualcli-> visualizzaut($query,$id, $nome, $cognome, $email, $citta);
-                        
+                        $query=sprintf($query,  mysqli_real_escape_string($conn, $citta));
                         $conn = new mysqli($servername, $user, $pass, $database);
                         $result = '';
                         if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {

@@ -1,8 +1,7 @@
 <?php
 class QueryVisualizzaUtente{
 	function visualizzaut($query, $id, $nome, $cognome, $email, $citta){
-    					require 'config.php';
-						$conn = new mysqli($servername, $user, $pass, $database);
+    					
     	 				
                         if(!empty($id)) {
                         	$query = $query.sprintf(' and id = '.$id);
@@ -17,7 +16,7 @@ class QueryVisualizzaUtente{
                            	$query = $query.sprintf(" and email = '".$email."'");
                         }
                         if(!empty($citta)){
-                           	$query = $query.sprintf(" and citta = '%s'", mysqli_real_escape_string($conn, $citta));
+                           	$query = $query.sprintf(" and citta = '%s'");
                         }
                          $query=$query.sprintf(' order by utente.id');
          return $query;
