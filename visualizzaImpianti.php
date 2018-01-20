@@ -1,5 +1,6 @@
 <?php
 	require 'config.php';
+    require 'constants.php';
     $conn = '';
 	session_start();
     $email = $_SESSION['email'];
@@ -9,7 +10,7 @@
 	}
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
-    if($result === false || $result->num_rows != 1){
+    if($result === false || $result->num_rows !== 1){
     	    header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
     }
 ?>
@@ -63,19 +64,19 @@
                         $citta=$_POST['citta'];
                         
                         $query = sprintf("SELECT * FROM impianto inner join utente on impianto.proprietario=utente.id inner join credenziale on utente.id=credenziale.utente where permesso='u'");
-                        if(!empty($id)) {
+                        if(!empty($id) === true) {
                         	$query = $query.sprintf(' and impianto.id = '.$id);
                         }
-                        if(!empty($nomeimpianto)){
+                        if(!empty($nomeimpianto) === true){
                            	$query = $query.sprintf(" and nomeimpianto = '".$nomeimpianto."'");
                         }
-                        if(!empty($idproprietario)){
+                        if(!empty($idproprietario) === true){
                            	$query = $query.sprintf(" and utente.id = '".$idproprietario."'");
                         }
-                        if(!empty($tipo)){
+                        if(!empty($tipo) === true){
                            	$query = $query.sprintf(" and tipo = '".$tipo."'");
                         }
-                        if(!empty($citta)){
+                        if(!empty($citta) === true){
                            	$query = $query.sprintf(" and impianto.citta = '".$citta."'");
                         }
                         $query=$query.sprintf(' order by impianto.id');
@@ -92,16 +93,16 @@
                         	$row=mysqli_fetch_row($result);
                             
                         	$str = '<tr>';
-                            $str = $str.'<td>'.htmlspecialchars($row[0]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[2]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[1]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[3]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[4]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[5]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[6]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[7]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[9]).'</td>';
-                            $str = $str.'<td>'.htmlspecialchars($row[8]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[ZERO]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[DUE]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[UNO]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[TRE]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[QUATTRO]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[CINQUE]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[SEI]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[SETTE]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[NOVE]).'</td>';
+                            $str = $str.'<td>'.htmlspecialchars($row[OTTO]).'</td>';
                             $str = $str.'</tr>';
                             echo $str;
                         }

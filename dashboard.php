@@ -121,11 +121,11 @@ if($result === false || $result->num_rows !== 1){
 <script type="text/javascript">
 	var etichette = new String("");
     if(etichette == '') {
-    	etichette = <?php require 'chartClienti.php'; echo json_encode($date) ?>;
+    	etichette = <?php require 'chartClienti.php'; $stampa=''; if($stampa === ''){$stampa = json_encode($date);} echo $stampa;?>;
     }
     var dati = new String ("");
     if(dati == '') {
-    	dati = <?php require 'chartClienti.php'; echo json_encode($clienti) ?>;
+    	dati = <?php require 'chartClienti.php'; $stampa=''; if($stampa === ''){$stampa = json_encode($clienti);} echo $stampa; ?>;
     }
     
     var myChart = new Chart(document.getElementById("ChartClienti"), {

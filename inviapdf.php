@@ -1,5 +1,6 @@
 <?php
 	require 'config.php';
+    require 'constants.php';
     $conn = '';
     session_start();
     $email = $_SESSION['email'];
@@ -9,7 +10,7 @@
 	}
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email), mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
-    if($result === false || $result->num_rows != 1){
+    if($result === false || $result->num_rows !== 1){
     	    header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
     }
     $destinatario = $_SESSION['destinatario'];
@@ -41,7 +42,7 @@ $tipo = $_SESSION['tipo'];
 $marca = $_SESSION['marca'];
 $nomeposizione = $_SESSION['nomeposizione'];
 // dichiarare il percorso dei font
-define('FPDF_FONTPATH','./font/');
+
  
 //questo file e la cartella font si trovano nella stessa directory
 require 'fpdf.php';
@@ -86,7 +87,8 @@ function FancyTable($header, $data)
     $this->SetLineWidth(.3);
     $this->SetFont('','',8);
     // Header
-    for($i=0;$i<count($header);$i++)
+    $count = count($header);
+    for($i=0;$i<$count;$i++)
         $this->Cell(24,7,$header[$i],1,0,'C',true);
     $this->Ln();
     // Color and font restoration

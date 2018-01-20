@@ -1,5 +1,6 @@
 <?php
 	require 'config.php';
+    require 'constants.php';
     $conn= '';
     
 	session_start();
@@ -10,7 +11,7 @@
     }
     $query = sprintf("SELECT * FROM credenziale WHERE email = '%s' AND password = '%s'",  mysqli_real_escape_string($conn, $email),  mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
-    if($result === false || $result->num_rows != 1){
+    if($result === false || $result->num_rows !== 1){
     	    header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
     }
 ?>
@@ -37,15 +38,16 @@
 
         if($_GET['impianto']==='Nessun impianto registrato') {
         	header('Location: http://sensorlogicsystemlogin.altervista.org/nessunImpianto.html');
-        } elseif(empty($_GET['impianto'])===true){
+        }
+        if(empty($_GET['impianto'])===true){
         	$query=sprintf("SELECT nomeimpianto from credenziale inner join utente on credenziale.utente=utente.id inner join impianto on utente.id=impianto.proprietario where email='%s' order by nomeimpianto",  mysqli_real_escape_string($conn, $email));
             $result=$conn->query($query);
             if($result === false || $result->num_rows===0){
             	header('Location: http://sensorlogicsystemlogin.altervista.org/nessunImpianto.html');
-            } elseif($result->num_rows>0){
+            } else{if($result->num_rows>0){
             	$row=mysqli_fetch_row($result);
                 $impianto=$row[0];
-            }
+            }}
         }else{
         	$impianto=$_GET['impianto'];
         }
@@ -129,12 +131,12 @@
     					}
                         $today=getdate();
                         $date=$today['year'];
-                        if($today['mon']<10){
+                        if($today[MON]<DIECI){
                         	$date=$date.'0'.$today['mon'];
                         }else {
                         	$date=$date.$today['mon'];
                         }
-                        if($today['mday']<10){
+                        if($today[MDAY]<DIECI){
                         	$date=$date.'0'.$today['mday'];
                         }else{
                         	$date=$date.$today['mday'];
@@ -149,7 +151,7 @@
                         $count=0;
                         for($i=0; $i<$result->num_rows; $i++){
                         	$row=mysqli_fetch_row($result);
-                            $date2=substr($row[0],0,8);
+                            $date2=substr($row[ZERO],ZERO,OTTO);
                             if($date===$date2){
                             	$count++;
                             }
@@ -166,11 +168,11 @@
 <script type="text/javascript">
 	var tipo = new String(""); 
     if(tipo == '') {
-    	tipo = <?php require 'chartTipo.php'; echo json_encode($tipo) ?>;
+    	tipo = <?php require 'chartTipo.php'; $stampa=''; if($stampa === ''){$stampa = json_encode($tipo);} echo $stampa;  ?>;
     }
     var countTipo = new String(""); 
     if(countTipo == '') {
-    	countTipo = <?php require 'chartTipo.php'; echo json_encode($countTipo) ?>;
+    	countTipo = <?php require 'chartTipo.php'; $stampa=''; if($stampa === ''){$stampa = json_encode($countTipo);} echo $stampa; ?>;
     }
                 
     var myChart = new Chart(document.getElementById("chartTipo"), {
@@ -196,11 +198,11 @@
 <script type="text/javascript">
 		var tipo = new String(""); 
         if(tipo == '') {
- 			tipo = <?php require 'chartRilevazioni.php'; echo json_encode($tipo) ?>;
+ 			tipo = <?php require 'chartRilevazioni.php'; $stampa=''; if($stampa === ''){$stampa = json_encode($tipo);} echo $stampa;?>;
         }
         var rilevazioni = new String(""); 
         if(rilevazioni == '') {
-    		rilevazioni = <?php require 'chartRilevazioni.php'; echo json_encode($rilevazioni) ?>;
+    		rilevazioni = <?php require 'chartRilevazioni.php'; $stampa=''; if($stampa === ''){$stampa = json_encode($rilevazioni);} echo $stampa;?>;
         }    
    		var chart= new Chart(document.getElementById("chartRilevazioni"), {
         type: 'horizontalBar',

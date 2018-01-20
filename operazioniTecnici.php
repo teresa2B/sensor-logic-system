@@ -2,24 +2,24 @@
 	include_once 'Layout.php';
 	require 'config.php';
     require 'nocsrf.php';
+    require 'constants.php';
 	$csrf = new nocsrf();
-    
+    $conn = '';
 	session_start();
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
     $query = sprintf("SELECT * FROM credenziale where email='".$email."' and password='".$password."'");
-    $conn = new mysqli($servername, $user, $pass, $database);
+    if(empty($conn) === true){
+    	$conn = new mysqli($servername, $user, $pass, $database);
+    }
     $result = $conn->query($query);
-    if($result === false || $result->num_rows != 1){
+    if($result === false || $result->num_rows !== 1){
     	    header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
     }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="AlterVista - Editor HTML"/>
-  <title></title>
   <link href="adminDesktop.css" media="only screen and (min-width: 401px)" rel="stylesheet" type="text/css">
   <link href="adminMobile.css" media="only screen and (max-width: 400px)" rel="stylesheet" type="text/css">
 </head>
@@ -63,7 +63,7 @@
                     $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
    					$pass = array();
     				$alphaLength = strlen($alphabet) - 1;
-    				for ($i = 0; $i < 8; $i++) {
+    				for ($i = ZERO; $i < OTTO; $i++) {
        	 				$n = rand(0, $alphaLength);
        					$pass[] = $alphabet[$n];
    					}
@@ -83,7 +83,7 @@
                         $regexemail = '/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/';
 						$send = false;
                         if (preg_match($regexemail, $email) === 1) {
-                        	if($csrf->check('csrf_token', $_POST, false, 60*19, true)){
+                        	if($csrf->check(CSRF, $_POST, false, SIZE, true) === true){
                         		$send = mail($email, $mail_oggetto, $mail_corpo, $mail_headers);
                             }
                         }
@@ -137,7 +137,7 @@
                 if($result->num_rows === 1){
                 	$query=sprintf('DELETE FROM utente WHERE id='.$id);
                     $result = $conn->query($query);
-                    if(!$result === false) {
+                    if(!($result === false) === true) {
                         $str = '<span class="filtra">Tecnico rimosso con successo</span>';
                         echo $str;
                     } else {
@@ -205,14 +205,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[3];
+                   						echo $row[TRE];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$nome=$_POST['nome2'];
                             		if(isset($nome)===true){
                             			echo $nome;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[A-Za-z]{0,50}" title="Deve essere composto da sole lettere" required/></td>
                 </tr>
                 <tr>
@@ -227,14 +227,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[2];
+                   						echo $row[DUE];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$cognome=$_POST['cognome2'];
                             		if(isset($cognome)===true){
                             			echo $cognome;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[A-Za-z]{0,50}" title="Deve essere composto da sole lettere" required/></td>
                 </tr>
                 <tr>
@@ -249,14 +249,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[1];
+                   						echo $row[UNO];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$cf=$_POST['cf2'];
                             		if(isset($cf)===true){
                             			echo $cf;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "^[a-zA-Z]{6}[0-9]{2}[a-zA-Z][0-9]{2}[a-zA-Z][0-9]{3}[a-zA-Z]$" title="Deve essere composto da 16 valori, seguendo il formato del cofice fiscale" required/></td>
                 </tr>
                 <tr>
@@ -273,14 +273,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                                        if($row[4]==='m'){echo 'selected="selected"';}
+                                        if($row[QUATTRO]==='m'){echo 'selected="selected"';}
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$sesso=$_POST['sesso2'];
                             		if(isset($sesso)===true){
                             			if($sesso==='m'){echo 'selected="selected"';}
                            	 		}
-                                }
+                                }}
                        		?>>M</option>
   							<option value="f"
                             <?php
@@ -292,14 +292,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                                        if($row[4]==='f'){echo 'selected="selected"';}
+                                        if($row[QUATTRO]==='f'){echo 'selected="selected"';}
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$sesso=$_POST['sesso2'];
                             		if(isset($sesso)===true){
                             			if($sesso==='f'){echo 'selected="selected"';}
                            	 		}
-                                }
+                                }}
                        		?>>F</option>
                     	</select> 
                 	</td>
@@ -322,14 +322,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[5];
+                   						echo $row[CINQUE];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$telefono=$_POST['telefono2'];
                             		if(isset($telefono)===true){
                             			echo $telefono;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[0-9]{0,10}" title="Deve essere composto da soli 10 numeri" required/></td>
                   </tr>
                   <tr>
@@ -344,14 +344,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[13];
+                   						echo $row[TREDICI];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$email=$_POST['email2'];
                             		if(isset($email)===true){
                             			echo $email;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[^@]+@[^@]+\.[a-zA-Z]{2,6}" title="Deve rispettare il formato: email@dominio.com" required/></td>
                   </tr>
                   <tr>
@@ -366,14 +366,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[6];
+                   						echo $row[SEI];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$data=$_POST['datadinascita2'];
                             		if(isset($data)===true){
                             			echo $data;
                            	 		}
-                                }
+                                }}
                        		?>" title="Deve contenere una data valida" required/></td>
                   </tr>
                   <tr>
@@ -388,14 +388,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[11];
+                   						echo $row[UNDICI];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$cap=$_POST['cap2'];
                             		if(isset($cap)===true){
                             			echo $cap;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[0-9]{0,5}" title="Deve essere composto da soli 5 numeri" required/></td>
                   </tr>
               </tbody>
@@ -417,14 +417,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[7];
+                   						echo $row[SETTE];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$citta=$_POST['citta2'];
                             		if(isset($citta)===true){
                             			echo $citta;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[A-Za-z]{0,50}" title="Deve essere composto da sole lettere"  required/></td>
                     </tr>
                     <tr>
@@ -439,14 +439,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[8];
+                   						echo $row[OTTO];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$indirizzo=$_POST['indirizzo2'];
                             		if(isset($indirizzo)===true){
                             			echo $indirizzo;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[a-zA-Z0-9]+{0,50}" title="Deve essere composta da lettere e/o numeri" required/></td>
                     </tr>
                     <tr>
@@ -461,14 +461,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[9];
+                   						echo $row[NOVE];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$numcivico=$_POST['numcivico2'];
                             		if(isset($numcivico)===true){
                             			echo $numcivico;
                            	 		}
-                                }
+                                }}
                        		?>" pattern="[a-zA-Z0-9]+{0,50}"title="Deve essere composta da lettere e/o numeri" required/></td>
                     </tr>
                     <tr>
@@ -483,14 +483,14 @@
                 					$result = $conn->query($query);
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo $row[10];
+                   						echo $row[DIECI];
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$provincia=$_POST['provincia2'];
                             		if(isset($provincia)===true){
                             			echo $provincia;
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[A-Za-z]{0,2}" title="Deve contenere 2 lettere" required/></td>
                     </tr>
                 </tbody>
@@ -520,12 +520,15 @@
     	<button class="buttfiltro" name="salvare" value="salvare" type="submit" id="salvare" 
         	<?php 
            		require 'config.php';
+                $conn = '';
         		$id=$_POST['id2']; 
                 if(isset($id)===false){
                 	echo ' disabled ';
                 }
                 $query=sprintf('SELECT * FROM utente inner join credenziale on id=utente WHERE id='.$id." and permesso='t'");
-                $conn = new mysqli($servername, $user, $pass, $database);
+                if(empty($conn) === true){
+                    $conn = new mysqli($servername, $user, $pass, $database);
+                }
                 $result = $conn->query($query);
                 if($result->num_rows !== 1){
                 	echo ' disabled ';

@@ -1,5 +1,6 @@
 <?php
 	require 'config.php';
+    require 'constants.php';
     $conn = '';
 	session_start();
     $email = $_SESSION['email'];
@@ -9,7 +10,7 @@
     }
     $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'", mysqli_real_escape_string($conn, $email), mysqli_real_escape_string($conn, $password));
     $result = $conn->query($query);
-    if($result === false || $result->num_rows != 1){
+    if($result === false || $result->num_rows !== 1){
     	    header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
     }
 ?>
@@ -125,7 +126,7 @@
                 	if(isset($_SESSION['email']) === true && isset($_SESSION['password']) === true ) {
                 		$result = $conn->query($query);
                 	}  
-                    if(!$result === false) {
+                    if(!($result === false) === true) {
                         $str = '<span class="filtra">Posizione rimossa con successo</span>';
                         echo htmlspecialchars($str);
                     } else {
@@ -200,14 +201,14 @@
                 					}  
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo htmlspecialchars($row[3]);
+                   						echo htmlspecialchars($row[TRE]);
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$idimpianto=$_POST['idimpianto2'];
                             		if(isset($idimpianto)===true){
                             			echo htmlspecialchars($idimpianto);
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[0-9]{0,11}" title="Deve essere composto da soli numeri" required/></td>
                 </tr>
             </tbody>
@@ -234,12 +235,12 @@
                                     	$row = mysqli_fetch_row($result);
                    						echo htmlspecialchars($row[1]);
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$nome=$_POST['nomeposizione2'];
                             		if(isset($nome)===true){
                             			echo htmlspecialchars($nome);
                            	 		}
-                                }
+                                }}
                        		?>" pattern= "[a-zA-Z0-9]+{0,50}" title="Deve essere composta da lettere e/o numeri" required/></td>
                 </tr>
               </tbody>
@@ -264,14 +265,14 @@
                 					}  
                                     if($result->num_rows === 1) {
                                     	$row = mysqli_fetch_row($result);
-                   						echo htmlspecialchars($row[2]);
+                   						echo htmlspecialchars($row[DUE]);
                                     }
-                                } elseif(isset($_POST['salvare'])===true) {
+                                } else{if(isset($_POST['salvare'])===true) {
                                 	$descrizione=$_POST['descrizione2'];
                             		if(isset($descrizione)===true){
                             			echo htmlspecialchars($descrizione);
                            	 		}
-                                }
+                                }}
                        		?>" /></td>
                   	</tr>
                 </tbody>

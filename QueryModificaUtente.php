@@ -16,5 +16,4 @@ class QueryModificaUtente{
                     echo $str;
                 }
 	}
-}
-?>
+}

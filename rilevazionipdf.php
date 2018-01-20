@@ -1,5 +1,6 @@
 <?php
 require 'config.php';
+require 'constants.php';
 $conn = '';
 session_start();
 $email = $_SESSION['email'];
@@ -9,7 +10,7 @@ if(empty($conn) === true){
 }
 $query = sprintf("SELECT * FROM credenziale where email='%s' and password='%s'",mysqli_real_escape_string($conn, $email),mysqli_real_escape_string($conn, $password));
 $result = $conn->query($query);
-if($result === false || $result->num_rows != 1){
+if($result === false || $result->num_rows !== 1){
     header('Location: http://sensorlogicsystemlogin.altervista.org/index.php');
 }
 ?>
@@ -26,7 +27,6 @@ $tipo = $_SESSION['tipo'];
 $marca = $_SESSION['marca'];
 $nomeposizione = $_SESSION['nomeposizione'];
 // dichiarare il percorso dei font
-define('FPDF_FONTPATH','./font/');
 
 //questo file e la cartella font si trovano nella stessa directory
 require 'fpdf.php';
@@ -41,55 +41,56 @@ class PDF extends FPDF
     {
 
         // Arial bold 15
-        $this->SetFont('Arial','B',15);
+        $this->SetFont(ARIAL,B,QUINDICI);
         // Move to the right
-        $this->Cell(80);
+        $this->Cell(OTTANTA);
         // Title
-        $this->Cell(30,10,'Sensor Logic System',0,0,'C');
+        $this->Cell(TRENTA,DIECI,LOGO,ZERO,ZERO,C);
         // Line break
-        $this->Ln(20);
+        $this->Ln(VENTI);
     }
 
 // Page footer
     function Footer()
     {
         // Position at 1.5 cm from bottom
-        $this->SetY(-15);
+        $this->SetY(MENOQUINDICI);
         // Arial italic 8
-        $this->SetFont('Arial','I',8);
+        $this->SetFont(ARIAL,I,OTTO);
         // Page number
-        $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+        $this->Cell(ZERO,DIECI,'Page '.$this->PageNo().'/{nb}',ZERO,ZERO,C);
     }
 
 // Colored table
     function FancyTable($header, $data)
     {
         // Colors, line width and bold font
-        $this->SetFillColor(255,0,0);
-        $this->SetTextColor(255);
-        $this->SetDrawColor(128,0,0);
-        $this->SetLineWidth(.3);
-        $this->SetFont('','',8);
+        $this->SetFillColor(DUECENTE55,ZERO,ZERO);
+        $this->SetTextColor(DUECENTO55);
+        $this->SetDrawColor(CENTO28,ZERO,ZERO);
+        $this->SetLineWidth(PUNTO3);
+        $this->SetFont(VUOTO,VUOTO,OTTO);
         // Header
-        for($i=0;$i<count($header);$i++)
-            $this->Cell(24,7,$header[$i],1,0,'C',true);
+        $count = count($header);
+        for($i=0;$i<$count;$i++)
+            $this->Cell(VENTIQUATTRO,SETTE,$header[$i],UNO,ZERO,C,true);
         $this->Ln();
         // Color and font restoration
-        $this->SetFillColor(224,235,255);
-        $this->SetTextColor(0);
-        $this->SetFont('');
+        $this->SetFillColor(DUECENTO24,DUECENTO35,DUECENTO55);
+        $this->SetTextColor(ZERO);
+        $this->SetFont(VUOTO);
         // Data
         $fill = false;
         foreach($data as $row)
         {
-            $this->Cell(24,6,$row[0],'LR',0,'L',$fill);
-            $this->Cell(24,6,$row[1],'LR',0,'L',$fill);
-            $this->Cell(24,6,$row[2],'LR',0,'R',$fill);
-            $this->Cell(24,6,$row[3],'LR',0,'R',$fill);
-            $this->Cell(24,6,$row[4],'LR',0,'R',$fill);
-            $this->Cell(24,6,$row[5],'LR',0,'R',$fill);
-            $this->Cell(24,6,$row[6],'LR',0,'R',$fill);
-            $this->Cell(24,6,$row[7],'LR',0,'R',$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[ZERO],LR,ZERO,L,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[UNO],LR,ZERO,L,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[DUE],LR,ZERO,R,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[TRE],LR,ZERO,R,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[QUATTRO],LR,ZERO,R,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[CINQUE],LR,ZERO,R,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[SEI],LR,ZERO,R,$fill);
+            $this->Cell(VENTIQUATTRO,SEI,$row[SETTE],LR,ZERO,R,$fill);
             $this->Ln();
             $fill = !$fill;
         }
@@ -110,27 +111,27 @@ $p->AddPage();
 
 // Impostare le caratteristiche del carattere
 $p->SetTextColor(0);
-$p->SetFont('Arial', '', 9);
+$p->SetFont(ARIAL, VUOTO, NOVE);
 
 // Le funzioni per scrivere il testo
 $msg='Rilevazioni dell'."'".'impianto '.$impianto;
-$p->Write(5, $msg);
+$p->Write(CINQUE, $msg);
 $msg='';
 
 $objmsg=new OperazioniPDF();
 $msg = $objmsg->intestazionePdf($date, $idr, $ids, $tipo, $nomeposizione, $marca);
 
-$p->Write(5, $msg);
-$p->Write(5, "\n\n");
+$p->Write(CINQUE, $msg);
+$p->Write(CINQUE, "\n\n");
 $header = array('ID Rilevazione', 'Data rilevazione', 'Orario rilevazione', 'Valore rilevazione', 'ID Sensore', 'Tipologia sensore', 'Marca sensore', 'Posizione');
-
+if(empty($conn) === true){
+   	$conn = new mysqli($servername, $user, $pass, $database);
+}
 $querypdf= new OperazioniPDF();
 if(empty($query) === true){
 	$query= $querypdf->queryPdf(mysqli_real_escape_string($conn, $idr), mysqli_real_escape_string($conn, $ids), mysqli_real_escape_string($conn, $tipo), mysqli_real_escape_string($conn, $nomeposizione), mysqli_real_escape_string($conn, $marca), mysqli_real_escape_string($conn, $impianto), mysqli_real_escape_string($conn, $email));
 }
-if(empty($conn) === true){
-   	$conn = new mysqli($servername, $user, $pass, $database);
-}
+
 $result = $conn->query($query);
 
 $data = array();
